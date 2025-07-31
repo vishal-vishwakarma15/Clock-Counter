@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Compact Countdown (Clean Layout)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .box {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+      width: 90%;
+      max-width: 300px;
+      text-align: center;
+      position: relative;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+
+    input[type="datetime-local"] {
+      padding: 8px;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      width: 100%;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      background-color: #27ae60;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1e8449;
+    }
+
+    #timer {
+      margin-top: 15px;
+      font-size: 17px;
+      color: #fffc;
+      background-color: rgba(0, 0, 0, 0.2);
+      padding: 12px 10px;
+      border-radius: 10px;
+      display: none;
+      word-spacing: 2px;
+    }
+
+    .hidden {
+      display: none;
+    }
+#resetBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #e74c3c;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+  line-height: 1;
+  text-align: center;
+  padding: 0;
+}
+
+#resetBtn:hover {
+  background-color: #c0392b;
+}
+
+    @media screen and (max-width: 400px) {
+      h2 {
+        font-size: 18px;
+      }
+
+      #timer {
+        font-size: 16px;
+        padding: 10px;
+      }
+
+      #resetBtn {
+        font-size: 12px;
+        padding: 4px 7px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>🕒 Countdown Timer</h2>
+
+    <!-- Reset/Exit Button -->
+    <button id="resetBtn" onclick="resetTimer()">×</button>
+
+    <!-- Input Form -->
+    <div id="inputSection">
+      <input type="datetime-local" id="datetime">
+      <button onclick="startCountdown()">Start</button>
+    </div>
+
+    <!-- Countdown Timer -->
+    <div id="timer">⏳ Countdown will appear here...</div>
+  </div>
+
+  <script>
+    let countdown;
+
+    function startCountdown() {
+      clearInterval(countdown);
+
+      const input = document.getElementById("datetime").value;
+      const inputSection = document.getElementById("inputSection");
+      const timerBox = document.getElementById("timer");
+      const resetBtn = document.getElementById("resetBtn");
+
+      if (!input) {
+        alert("❗ Please select date & time.");
+        return;
+      }
+
+      inputSection.classList.add("hidden");
+      timerBox.style.display = "block";
+      resetBtn.style.display = "inline-block";
+
+      const targetTime = new Date(input).getTime();
+
+      countdown = setInterval(() => {
+        const now = new Date().getTime();
+        const diff = targetTime - now;
+
+        if (diff <= 0) {
+          clearInterval(countdown);
+          timerBox.textContent = "✅ Time's up!";
+          return;
+        }
+
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+        timerBox.textContent = `⏱ ${d}d ${h}h ${m}m ${s}s`;
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(countdown);
+
+      document.getElementById("inputSection").classList.remove("hidden");
+      document.getElementById("timer").style.display = "none";
+      document.getElementById("resetBtn").style.display = "none";
+
+      document.getElementById("timer").textContent = "⏳ Countdown will appear here...";
+    }
+  </script>
+
+</body>
+</html>
